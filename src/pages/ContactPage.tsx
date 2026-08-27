@@ -20,14 +20,14 @@ export function ContactPage() {
         </a>
         <a
           className={styles.contactRow}
-          href="https://github.com/lautarosard/manaDeck-app"
+          href="https://github.com/LucasDiaz/ManaDeck"
           target="_blank"
           rel="noreferrer"
         >
           <span aria-hidden="true">
             <Code2 size={18} />
           </span>
-          github.com/lautarosard/manaDeck-app
+          github.com/LucasDiaz/ManaDeck
         </a>
         <a
           className={styles.contactRow}
