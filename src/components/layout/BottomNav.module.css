@@ -1,0 +1,83 @@
+.bar {
+  position: fixed;
+  inset-inline: 0;
+  bottom: 0;
+  z-index: var(--z-bottom-nav);
+  background: color-mix(in srgb, var(--color-surface) 92%, transparent);
+  backdrop-filter: blur(12px);
+  border-top: 1px solid var(--color-border);
+  box-shadow: var(--shadow-nav);
+  padding-bottom: var(--safe-bottom);
+}
+
+.nav {
+  max-width: var(--layout-max-width);
+  margin-inline: auto;
+}
+
+.list {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+}
+
+.item {
+  display: flex;
+}
+
+.link {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  min-height: var(--bottom-nav-height);
+  padding: var(--space-2) var(--space-1);
+  color: var(--color-text-subtle);
+  text-decoration: none;
+  transition: color var(--transition-base);
+}
+
+.link:hover {
+  color: var(--color-text-muted);
+}
+
+.iconWrap {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 26px;
+  border-radius: var(--radius-pill);
+  transition:
+    background-color var(--transition-base),
+    box-shadow var(--transition-base);
+}
+
+.label {
+  font-size: var(--text-xs);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: 0.01em;
+}
+
+/* ---- Active route highlight ---- */
+.active {
+  color: var(--color-accent);
+}
+
+.active .iconWrap {
+  background: var(--color-accent-soft);
+  box-shadow: var(--glow-accent);
+}
+
+.active::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 26px;
+  height: 3px;
+  border-radius: var(--radius-pill);
+  background: linear-gradient(90deg, var(--color-accent), var(--color-accent-2));
+}

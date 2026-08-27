@@ -1,0 +1,19 @@
+.shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+}
+
+.main {
+  flex: 1;
+  /* Reserve room for the fixed bottom navigation + device safe area. */
+  padding-bottom: calc(
+    var(--bottom-nav-height) + var(--safe-bottom) + var(--space-4)
+  );
+}
+
+.content {
+  max-width: var(--layout-max-width);
+  margin-inline: auto;
+  padding-inline: var(--space-4);
+}
