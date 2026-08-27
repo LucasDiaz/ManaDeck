@@ -3,32 +3,33 @@ import { Link } from "react-router-dom";
 import { ImageOff } from "lucide-react";
 import type { Card } from "../../types";
 import { getCardImage } from "../../services";
-import { ManaCost } from "./ManaCost";
-import { formatCardPrice, rarityLabel, cardSubline } from "./cardHelpers";
+import { formatCardPrice, rarityLabel } from "./cardHelpers";
 import styles from "./CardCard.module.css";
 
 interface CardCardProps {
   card: Card;
 }
 
-/** Card tile: art, name, mana cost / type, rarity badge, price tag. */
+/** Grid tile: the authentic card image with price + rarity overlaid. */
 export function CardCard({ card }: CardCardProps) {
   const [imageFailed, setImageFailed] = useState(false);
 
-  // Prefer the cropped art for the tile (no card frame / duplicate name),
-  // fall back to the full card image, then the small thumbnail.
   const image =
-    getCardImage(card, "art_crop") ??
     getCardImage(card, "normal") ??
-    getCardImage(card, "small");
+    getCardImage(card, "large") ??
+    getCardImage(card, "small") ??
+    getCardImage(card, "art_crop");
   const price = formatCardPrice(card);
-  const { manaCost, typeLine } = cardSubline(card);
   const showImage = Boolean(image) && !imageFailed;
 
   return (
     <li className={styles.wrapper}>
-      <Link to={`/carta/${card.id}`} className={styles.link}>
-        <div className={styles.art} data-rarity={card.rarity}>
+      <Link
+        to={`/carta/${card.id}`}
+        className={styles.link}
+        aria-label={`${card.name} — ${rarityLabel(card.rarity)}`}
+      >
+        <div className={styles.frame} data-rarity={card.rarity}>
           {showImage ? (
             <img
               src={image}
@@ -59,17 +60,6 @@ export function CardCard({ card }: CardCardProps) {
               {price.amount}
             </span>
           ) : null}
-        </div>
-
-        <div className={styles.body}>
-          <span className={styles.name}>{card.name}</span>
-          <span className={styles.meta}>
-            {manaCost ? (
-              <ManaCost cost={manaCost} size={16} />
-            ) : (
-              <span className={styles.typeLine}>{typeLine}</span>
-            )}
-          </span>
         </div>
       </Link>
     </li>

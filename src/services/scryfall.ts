@@ -305,7 +305,57 @@ export async function getCardById(
   });
 }
 
+/**
+ * Fetch every printing of a card, newest first, given its `oracle_id`.
+ * Uses `q=oracleid:<id>&unique=prints`. A 404 (nothing found) yields `[]`.
+ */
+export async function getCardPrints(
+  oracleId: string,
+  options: { signal?: AbortSignal } = {},
+): Promise<Card[]> {
+  const trimmed = oracleId.trim();
+  if (!trimmed) return [];
+
+  try {
+    const list = await request<ScryfallListResponse<Card>>("/cards/search", {
+      params: {
+        q: `oracleid:${trimmed}`,
+        unique: "prints",
+        order: "released",
+        dir: "desc",
+      },
+      signal: options.signal,
+    });
+    return list.data;
+  } catch (error) {
+    if (error instanceof ScryfallApiError && error.status === 404) return [];
+    throw error;
+  }
+}
+
 /* ---- Helpers ------------------------------------------- */
+
+const SYMBOL_CDN = "https://svgs.scryfall.io/card-symbols";
+const SET_ICON_CDN = "https://svgs.scryfall.io/sets";
+
+/**
+ * Official Scryfall SVG URL for a mana / cost symbol.
+ * Accepts `"{W}"`, `"W"`, `"{G/U}"`, `"{2/W}"`, `"{T}"`, `"{15}"`, … —
+ * braces are stripped and slashes removed (`{G/U}` → `GU`).
+ */
+export function getManaSymbolUrl(symbol: string): string {
+  const code = symbol
+    .trim()
+    .replace(/[{}]/g, "")
+    .replace(/\//g, "")
+    .toUpperCase();
+  return `${SYMBOL_CDN}/${encodeURIComponent(code || "C")}.svg`;
+}
+
+/** Official Scryfall SVG URL for a set's icon, by set code (e.g. `"neo"`). */
+export function getSetIconUrl(setCode: string): string {
+  return `${SET_ICON_CDN}/${encodeURIComponent(setCode.trim().toLowerCase())}.svg`;
+}
 
 /**
  * Safely resolve a card's primary image URI.

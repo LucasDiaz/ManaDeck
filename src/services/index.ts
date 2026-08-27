@@ -7,5 +7,8 @@ export {
   getRandomCards,
   searchCards,
   getCardById,
+  getCardPrints,
   getCardImage,
+  getManaSymbolUrl,
+  getSetIconUrl,
 } from "./scryfall";

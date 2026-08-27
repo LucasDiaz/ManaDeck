@@ -99,7 +99,8 @@ export function SearchPage() {
   };
 
   /** Toggle a chip and, if a search is already active, re-run immediately. */
-  const toggleColor = (color: ManaSymbolCode) => {
+  const toggleColor = (symbol: string) => {
+    const color = symbol as ManaSymbolCode;
     const next = new Set(colors);
     if (next.has(color)) next.delete(color);
     else next.add(color);

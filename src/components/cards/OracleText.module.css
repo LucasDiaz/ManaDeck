@@ -1,0 +1,32 @@
+.box {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-luminous);
+  background: var(--bg-surface);
+  font-size: var(--text-sm);
+  line-height: var(--leading-relaxed);
+  color: var(--text-primary);
+}
+
+.paragraph {
+  margin: 0;
+}
+
+.inline {
+  display: inline-block;
+  width: 0.95em;
+  height: 0.95em;
+  vertical-align: -0.14em;
+  margin: 0 1px;
+}
+
+.flavor {
+  margin: 0;
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--border-subtle);
+  font-style: italic;
+  color: var(--text-secondary);
+}

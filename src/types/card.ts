@@ -159,25 +159,34 @@ export interface Card {
   cmc: number;
   type_line: string;
   oracle_text?: string;
+  flavor_text?: string;
   power?: string;
   toughness?: string;
   loyalty?: string;
+  defense?: string;
 
   colors?: Color[];
   color_identity: Color[];
   keywords?: string[];
 
   rarity: Rarity;
+  artist?: string;
   set?: string;
   set_name: string;
+  set_type?: string;
   collector_number?: string;
   digital?: boolean;
+  foil?: boolean;
+  nonfoil?: boolean;
+  finishes?: ("nonfoil" | "foil" | "etched")[];
 
   prices?: Prices;
   image_uris?: ImageUris;
   card_faces?: CardFace[];
   legalities: Legalities;
 
+  /** Scryfall search URL for every printing of this card. */
+  prints_search_uri?: string;
   scryfall_uri?: string;
   uri?: string;
 }

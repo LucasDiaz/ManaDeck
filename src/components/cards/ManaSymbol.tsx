@@ -1,67 +1,66 @@
 import type { CSSProperties } from "react";
-import type { ColorCode } from "../../types";
+import { getManaSymbolUrl } from "../../services";
+import { manaSymbolLabel } from "./manaLabels";
 import styles from "./ManaSymbol.module.css";
 
-/** Symbols this badge can render on its own (mono-colour + colorless). */
-export type ManaSymbolCode = ColorCode;
-
-const LABELS: Record<ManaSymbolCode, string> = {
-  W: "Blanco",
-  U: "Azul",
-  B: "Negro",
-  R: "Rojo",
-  G: "Verde",
-  C: "Incoloro",
-};
+/** Codes the mana-colour selector offers. */
+export type ManaSymbolCode = "W" | "U" | "B" | "R" | "G" | "C";
 
 interface ManaSymbolProps {
-  symbol: ManaSymbolCode;
-  /** Pixel diameter. */
+  /** Symbol code, with or without braces: `"{W}"`, `"W"`, `"{G/U}"`, `"2"`… */
+  symbol: string;
+  /** Pixel size. */
   size?: number;
-  /** Luminous glow + ring, e.g. when used as an active filter chip. */
+  /** Luminous ring + full opacity (mana-colour selector active state). */
   selected?: boolean;
-  /** Render as a real <button> for the colour selector. */
-  onToggle?: (symbol: ManaSymbolCode) => void;
+  /** Render as a toggle <button> (mana-colour selector). */
+  onToggle?: (symbol: string) => void;
+  /** Mark the image decorative (label is provided by an ancestor). */
+  decorative?: boolean;
 }
 
-/** Circular MTG mana badge with a per-colour radial glow. */
+/** Official Scryfall SVG mana symbol. */
 export function ManaSymbol({
   symbol,
-  size = 28,
+  size = 20,
   selected = false,
   onToggle,
+  decorative = false,
 }: ManaSymbolProps) {
-  const label = LABELS[symbol];
-  const className = selected
-    ? `${styles.badge} ${styles.selected}`
-    : styles.badge;
+  const label = manaSymbolLabel(symbol);
   const style = { "--size": `${size}px` } as CSSProperties;
+
+  const img = (
+    <img
+      src={getManaSymbolUrl(symbol)}
+      alt={decorative ? "" : label}
+      className={styles.img}
+      width={size}
+      height={size}
+      loading="lazy"
+      decoding="async"
+      draggable={false}
+    />
+  );
 
   if (onToggle) {
     return (
       <button
         type="button"
-        className={className}
-        data-color={symbol}
+        className={selected ? `${styles.chip} ${styles.selected}` : styles.chip}
         style={style}
         aria-pressed={selected}
         aria-label={`${label}${selected ? " (activo)" : ""}`}
         onClick={() => onToggle(symbol)}
       >
-        <span aria-hidden="true">{symbol}</span>
+        {img}
       </button>
     );
   }
 
   return (
-    <span
-      className={className}
-      data-color={symbol}
-      style={style}
-      role="img"
-      aria-label={label}
-    >
-      <span aria-hidden="true">{symbol}</span>
+    <span className={styles.badge} style={style}>
+      {img}
     </span>
   );
 }
