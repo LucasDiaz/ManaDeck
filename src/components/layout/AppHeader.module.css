@@ -4,22 +4,41 @@
   z-index: var(--z-header);
   display: flex;
   align-items: center;
-  height: 52px;
+  height: var(--header-height);
   padding-inline: var(--space-4);
-  background: color-mix(in srgb, var(--color-bg) 88%, transparent);
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid var(--color-border);
+  background: var(--bg-frost);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border-luminous);
+}
+
+/* Top neon accent bar */
+.header::before {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--accent-primary) 25%,
+    var(--accent-glow) 50%,
+    var(--accent-secondary) 75%,
+    transparent
+  );
+  opacity: 0.9;
 }
 
 .brand {
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
-  color: var(--color-text);
+  color: var(--text-primary);
 }
 
 .brand:hover {
-  color: var(--color-text);
+  color: var(--text-primary);
 }
 
 .mark {
@@ -28,8 +47,13 @@
   width: 28px;
   height: 28px;
   border-radius: var(--radius-sm);
-  color: var(--color-text-on-accent);
-  background: linear-gradient(135deg, var(--color-accent), var(--color-accent-2));
+  color: var(--text-on-accent);
+  background: linear-gradient(
+    135deg,
+    var(--accent-primary),
+    var(--accent-secondary)
+  );
+  box-shadow: var(--glow-primary);
 }
 
 .wordmark {
@@ -39,5 +63,5 @@
 }
 
 .accent {
-  color: var(--color-accent);
+  color: var(--accent-glow);
 }

@@ -5,30 +5,32 @@
   text-align: center;
   gap: var(--space-3);
   padding: var(--space-7) var(--space-4);
-  border: 1px dashed var(--color-border-strong);
+  border: 1px solid var(--border-luminous);
   border-radius: var(--radius-lg);
-  background: var(--color-surface);
+  background: var(--bg-glass);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
 .iconRing {
   display: grid;
   place-items: center;
-  width: 52px;
-  height: 52px;
+  width: 54px;
+  height: 54px;
   border-radius: var(--radius-pill);
-  color: var(--color-accent);
-  background: var(--color-accent-soft);
-  box-shadow: var(--glow-accent);
+  color: var(--accent-glow);
+  background: rgba(121, 76, 195, 0.18);
+  box-shadow: var(--glow-primary);
 }
 
 .title {
   font-size: var(--text-lg);
   font-weight: var(--font-weight-semibold);
-  color: var(--color-text);
+  color: var(--text-primary);
 }
 
 .description {
   font-size: var(--text-sm);
-  color: var(--color-text-muted);
-  max-width: 38ch;
+  color: var(--text-secondary);
+  max-width: 40ch;
 }

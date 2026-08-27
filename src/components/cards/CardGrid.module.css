@@ -1,0 +1,31 @@
+/* RF8 responsive grid — explicit breakpoints, no auto-fill. */
+
+.grid {
+  display: grid;
+  gap: var(--space-3);
+  /* Mobile portrait: ≤480px → 2 per row */
+  grid-template-columns: repeat(2, 1fr);
+}
+
+/* Mobile landscape: 481–767px → 3 per row */
+@media (min-width: 481px) {
+  .grid {
+    gap: var(--space-4);
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Tablet: 768–1023px → 3 per row */
+@media (min-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Desktop: ≥1024px → 4 per row */
+@media (min-width: 1024px) {
+  .grid {
+    gap: var(--space-5);
+    grid-template-columns: repeat(4, 1fr);
+  }
+}

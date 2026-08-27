@@ -6,6 +6,7 @@ import {
   WishlistPage,
   HistoryPage,
   ContactPage,
+  CardDetailPage,
   NotFoundPage,
 } from "./pages";
 
@@ -16,6 +17,7 @@ function App() {
       <Route element={<Layout />}>
         <Route index element={<HomePage />} />
         <Route path="buscar" element={<SearchPage />} />
+        <Route path="carta/:id" element={<CardDetailPage />} />
         <Route path="deseos" element={<WishlistPage />} />
         <Route path="historial" element={<HistoryPage />} />
         <Route path="contacto" element={<ContactPage />} />

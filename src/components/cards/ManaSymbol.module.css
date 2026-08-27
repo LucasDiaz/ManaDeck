@@ -1,0 +1,66 @@
+.badge {
+  --size: 28px;
+  --mana: var(--mana-c);
+  --ink: #12101a;
+
+  display: inline-grid;
+  place-items: center;
+  width: var(--size);
+  height: var(--size);
+  border-radius: var(--radius-pill);
+  flex-shrink: 0;
+
+  font-family: var(--font-mono);
+  font-size: calc(var(--size) * 0.46);
+  font-weight: var(--font-weight-bold);
+  line-height: 1;
+  color: var(--ink);
+
+  background:
+    radial-gradient(
+      circle at 32% 28%,
+      color-mix(in srgb, var(--mana) 100%, white 22%),
+      var(--mana) 72%
+    );
+  border: 1px solid rgba(0, 0, 0, 0.35);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.35),
+    0 0 0 1px rgba(0, 0, 0, 0.2);
+  transition:
+    box-shadow var(--transition-base),
+    transform var(--transition-fast),
+    outline-color var(--transition-base);
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+button.badge {
+  cursor: pointer;
+}
+
+button.badge:hover {
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.35),
+    0 0 10px 1px color-mix(in srgb, var(--mana) 55%, transparent);
+}
+
+button.badge:active {
+  transform: scale(0.92);
+}
+
+/* Luminous selected state */
+.selected {
+  outline-color: var(--accent-glow);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.4),
+    0 0 14px 2px color-mix(in srgb, var(--mana) 70%, transparent),
+    var(--glow-lavender);
+}
+
+/* ---- Per-colour palette ---- */
+.badge[data-color="W"] { --mana: var(--mana-w); --ink: #2b2718; }
+.badge[data-color="U"] { --mana: var(--mana-u); --ink: #06182b; }
+.badge[data-color="B"] { --mana: var(--mana-b); --ink: #ece9f4; }
+.badge[data-color="R"] { --mana: var(--mana-r); --ink: #2b0a08; }
+.badge[data-color="G"] { --mana: var(--mana-g); --ink: #0a2410; }
+.badge[data-color="C"] { --mana: var(--mana-c); --ink: #1c1a26; }

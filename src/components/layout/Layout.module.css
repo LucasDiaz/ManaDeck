@@ -8,7 +8,7 @@
   flex: 1;
   /* Reserve room for the fixed bottom navigation + device safe area. */
   padding-bottom: calc(
-    var(--bottom-nav-height) + var(--safe-bottom) + var(--space-4)
+    var(--bottom-nav-height) + var(--safe-bottom) + var(--space-5)
   );
 }
 

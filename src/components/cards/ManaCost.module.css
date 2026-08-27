@@ -1,0 +1,31 @@
+.row {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  flex-wrap: wrap;
+}
+
+.generic {
+  --size: 20px;
+  display: inline-grid;
+  place-items: center;
+  min-width: var(--size);
+  height: var(--size);
+  padding-inline: calc(var(--size) * 0.16);
+  border-radius: var(--radius-pill);
+  flex-shrink: 0;
+
+  font-family: var(--font-mono);
+  font-size: calc(var(--size) * 0.5);
+  font-weight: var(--font-weight-bold);
+  line-height: 1;
+  color: #12101a;
+
+  background: radial-gradient(
+    circle at 32% 28%,
+    color-mix(in srgb, var(--mana-c) 100%, white 22%),
+    var(--mana-c) 72%
+  );
+  border: 1px solid rgba(0, 0, 0, 0.35);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.35);
+}

@@ -1,52 +1,92 @@
 /* =============================================================
    ManaDeck — Design Tokens
-   Mobile-first, dark theme. Cyan + neon-green accents.
+   Storm / Arcane dark palette with glowing electric accents.
+   See CLAUDE.md for the full style guide.
    ============================================================= */
 
 :root {
-  /* ---- Surface palette --------------------------------------- */
-  --color-bg: #121214;          /* app background            */
-  --color-surface: #1e1e24;     /* cards, nav, sheets        */
-  --color-surface-alt: #27272a; /* elevated / hover / border */
-  --color-surface-hover: #2f2f36;
+  /* ---- Storm palette (canonical names, per CLAUDE.md) -------- */
+  --bg-main: #0b0f19;              /* deep obsidian navy        */
+  --bg-surface: #1a284b;           /* storm container dark      */
+  --bg-surface-elevated: #321a6b;  /* deep arcane surface       */
+  --bg-glass: rgba(50, 26, 107, 0.45);
+  --bg-frost: rgba(26, 40, 75, 0.85); /* frosted storm surface  */
 
-  /* ---- Borders & dividers ------------------------------------ */
-  --color-border: #27272a;
-  --color-border-strong: #3a3a42;
+  --accent-primary: #794cc3;       /* arcane purple            */
+  --accent-primary-bright: #9a6fe0;
+  --accent-glow: #c3a7e3;          /* lightning glow lavender   */
+  --accent-secondary: #4f95b1;     /* electric cyan glow        */
+  --accent-secondary-bright: #6fb8d6;
+  --accent-cyan-dark: #064a69;     /* deep oceanic cyan        */
 
-  /* ---- Accents ---------------------------------------------- */
-  --color-accent: #22d3ee;       /* cyan  — primary accent    */
-  --color-accent-strong: #06b6d4;
-  --color-accent-soft: rgba(34, 211, 238, 0.14);
-  --color-accent-2: #4ade80;     /* neon green — secondary    */
-  --color-accent-2-strong: #22c55e;
-  --color-accent-2-soft: rgba(74, 222, 128, 0.14);
-  --glow-accent: 0 0 0 1px var(--color-accent-soft), 0 0 16px rgba(34, 211, 238, 0.25);
+  --border-subtle: rgba(195, 167, 227, 0.12);
+  --border-luminous: rgba(195, 167, 227, 0.15);
+  --border-strong: rgba(195, 167, 227, 0.28);
+
+  --glow-primary: 0 0 16px rgba(121, 76, 195, 0.4);
+  --glow-secondary: 0 0 16px rgba(79, 149, 177, 0.45);
+  --glow-lavender: 0 0 20px rgba(195, 167, 227, 0.35);
 
   /* ---- Text ------------------------------------------------- */
-  --color-text: #f4f4f5;
-  --color-text-muted: #a1a1aa;
-  --color-text-subtle: #71717a;
-  --color-text-on-accent: #06181c;
+  --text-primary: #eae6f5;
+  --text-secondary: #b3a9cc;
+  --text-muted: #7d7799;
+  --text-on-accent: #f7f3ff;
 
-  /* ---- Feedback -------------------------------------------- */
-  --color-danger: #f87171;
-  --color-warning: #fbbf24;
-  --color-success: var(--color-accent-2);
+  /* ---- Feedback ------------------------------------------- */
+  --color-danger: #f4708a;
+  --color-danger-soft: rgba(244, 112, 138, 0.16);
+  --color-warning: #f0b24b;
+  --color-success: #5bd6a4;
 
-  /* ---- Typography ----------------------------------------- */
+  /* ---- MTG mana colors ---------------------------------- */
+  --mana-w: #f6f0dc;
+  --mana-u: #4a90d9;
+  --mana-b: #4b4560;
+  --mana-r: #e2544b;
+  --mana-g: #5aa469;
+  --mana-c: #a7a2b8;
+
+  /* =========================================================
+     Compatibility aliases — earlier modules use --color-* names.
+     Kept pointing at the storm palette so nothing breaks.
+     ========================================================= */
+  --color-bg: var(--bg-main);
+  --color-surface: var(--bg-surface);
+  --color-surface-alt: var(--bg-surface-elevated);
+  --color-surface-hover: #24345f;
+  --color-border: var(--border-subtle);
+  --color-border-strong: var(--border-strong);
+
+  --color-accent: var(--accent-primary);
+  --color-accent-strong: var(--accent-primary-bright);
+  --color-accent-soft: rgba(121, 76, 195, 0.16);
+  --color-accent-2: var(--accent-secondary);
+  --color-accent-2-strong: var(--accent-secondary-bright);
+  --color-accent-2-soft: rgba(79, 149, 177, 0.16);
+  --glow-accent: 0 0 0 1px var(--border-luminous), var(--glow-primary);
+
+  --color-text: var(--text-primary);
+  --color-text-muted: var(--text-secondary);
+  --color-text-subtle: var(--text-muted);
+  --color-text-on-accent: var(--text-on-accent);
+
+  /* ---- Typography --------------------------------------- */
   --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Helvetica,
     Arial, sans-serif;
+  --font-display: "Inter", system-ui, -apple-system, "Segoe UI", Roboto,
+    sans-serif;
   --font-mono: ui-monospace, "SFMono-Regular", "JetBrains Mono", Menlo, Consolas,
     monospace;
 
-  --text-xs: 0.75rem;    /* 12px */
-  --text-sm: 0.875rem;   /* 14px */
-  --text-base: 1rem;     /* 16px */
-  --text-lg: 1.125rem;   /* 18px */
-  --text-xl: 1.375rem;   /* 22px */
-  --text-2xl: 1.75rem;   /* 28px */
-  --text-3xl: 2.25rem;   /* 36px */
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.375rem;
+  --text-2xl: 1.75rem;
+  --text-3xl: 2.25rem;
+  --text-4xl: 2.75rem;
 
   --font-weight-normal: 400;
   --font-weight-medium: 500;
@@ -57,7 +97,7 @@
   --leading-normal: 1.5;
   --leading-relaxed: 1.7;
 
-  /* ---- Spacing scale (4px base) --------------------------- */
+  /* ---- Spacing scale (4px base) ------------------------ */
   --space-1: 0.25rem;
   --space-2: 0.5rem;
   --space-3: 0.75rem;
@@ -67,37 +107,48 @@
   --space-7: 3rem;
   --space-8: 4rem;
 
-  /* ---- Radius -------------------------------------------- */
+  /* ---- Radius ---------------------------------------- */
   --radius-sm: 6px;
   --radius-md: 10px;
   --radius-lg: 16px;
+  --radius-xl: 22px;
   --radius-pill: 999px;
 
-  /* ---- Elevation --------------------------------------- */
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
-  --shadow-md: 0 6px 20px rgba(0, 0, 0, 0.45);
-  --shadow-nav: 0 -4px 24px rgba(0, 0, 0, 0.5);
+  /* ---- Elevation ----------------------------------- */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.45);
+  --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.5);
+  --shadow-nav: 0 -6px 28px rgba(0, 0, 0, 0.55);
 
-  /* ---- Layout ----------------------------------------- */
-  --layout-max-width: 480px;      /* mobile-first content cap */
-  --bottom-nav-height: 60px;
+  /* ---- Layout ------------------------------------- */
+  --layout-max-width: 480px;
+  --nav-max-width: 480px;
+  --header-height: 54px;
+  --bottom-nav-height: 62px;
   --safe-bottom: env(safe-area-inset-bottom, 0px);
 
-  /* ---- Motion ---------------------------------------- */
+  /* ---- Motion ------------------------------------ */
   --transition-fast: 120ms ease;
   --transition-base: 200ms ease;
+  --ease-out-back: cubic-bezier(0.34, 1.4, 0.64, 1);
 
-  /* ---- Z-index ---------------------------------------- */
+  /* ---- Z-index ---------------------------------- */
   --z-header: 100;
   --z-bottom-nav: 200;
+  --z-overlay: 300;
 }
 
-/* Responsive spacing / type bump for larger viewports.
-   The app stays mobile-first; this only relaxes the rhythm. */
-@media (min-width: 480px) {
+/* Responsive layout width. Mobile-first: the shell stays narrow on phones
+   and only widens on tablet / desktop so the card grid can breathe. */
+@media (min-width: 768px) {
   :root {
-    --text-2xl: 1.875rem;
+    --layout-max-width: 720px;
     --text-3xl: 2.5rem;
-    --layout-max-width: 560px;
+    --text-4xl: 3rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --layout-max-width: 1080px;
   }
 }

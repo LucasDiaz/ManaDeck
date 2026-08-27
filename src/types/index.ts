@@ -1,2 +1,2 @@
 export type * from "./navigation";
-export type * from "./scryfall";
+export * from "./card";

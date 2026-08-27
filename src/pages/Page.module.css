@@ -1,4 +1,4 @@
-/* Shared presentational primitives for the placeholder pages. */
+/* Shared presentational primitives for the simple placeholder pages. */
 
 .section {
   display: flex;
@@ -8,7 +8,7 @@
 }
 
 .lead {
-  color: var(--color-text-muted);
+  color: var(--text-secondary);
   font-size: var(--text-sm);
   line-height: var(--leading-relaxed);
 }
@@ -19,7 +19,7 @@
   gap: var(--space-3);
 }
 
-@media (min-width: 480px) {
+@media (min-width: 600px) {
   .grid {
     grid-template-columns: 1fr 1fr;
   }
@@ -30,19 +30,27 @@
   flex-direction: column;
   gap: var(--space-2);
   padding: var(--space-4);
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--border-luminous);
   border-radius: var(--radius-md);
-  background: var(--color-surface);
-  color: var(--color-text);
+  background: var(--bg-glass);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: var(--text-primary);
   transition:
     border-color var(--transition-base),
+    box-shadow var(--transition-base),
     transform var(--transition-fast);
 }
 
 a.card:hover {
-  border-color: var(--color-accent);
-  color: var(--color-text);
+  border-color: var(--border-strong);
+  box-shadow: var(--glow-primary);
+  color: var(--text-primary);
   transform: translateY(-2px);
+}
+
+a.card:active {
+  transform: scale(0.98);
 }
 
 .cardIcon {
@@ -51,8 +59,8 @@ a.card:hover {
   width: 38px;
   height: 38px;
   border-radius: var(--radius-sm);
-  color: var(--color-accent);
-  background: var(--color-accent-soft);
+  color: var(--accent-glow);
+  background: rgba(121, 76, 195, 0.18);
 }
 
 .cardTitle {
@@ -62,7 +70,7 @@ a.card:hover {
 
 .cardText {
   font-size: var(--text-sm);
-  color: var(--color-text-muted);
+  color: var(--text-secondary);
 }
 
 .contactList {
@@ -76,15 +84,25 @@ a.card:hover {
   align-items: center;
   gap: var(--space-3);
   padding: var(--space-4);
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--border-luminous);
   border-radius: var(--radius-md);
-  background: var(--color-surface);
-  color: var(--color-text);
+  background: var(--bg-glass);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: var(--text-primary);
+  transition:
+    border-color var(--transition-base),
+    box-shadow var(--transition-base);
 }
 
 .contactRow:hover {
-  border-color: var(--color-accent-2);
-  color: var(--color-text);
+  border-color: var(--border-strong);
+  box-shadow: var(--glow-secondary);
+  color: var(--text-primary);
+}
+
+.contactRow:active {
+  transform: scale(0.98);
 }
 
 .contactRow span {
@@ -93,7 +111,7 @@ a.card:hover {
   width: 34px;
   height: 34px;
   border-radius: var(--radius-sm);
-  color: var(--color-accent-2);
-  background: var(--color-accent-2-soft);
+  color: var(--accent-secondary-bright);
+  background: rgba(79, 149, 177, 0.18);
   flex-shrink: 0;
 }
