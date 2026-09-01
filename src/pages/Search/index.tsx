@@ -1,5 +1,10 @@
 import { type FormEvent, useCallback, useMemo, useState } from "react";
-import { Search as SearchIcon, X, SlidersHorizontal } from "lucide-react";
+import {
+  Search as SearchIcon,
+  X,
+  SlidersHorizontal,
+  ChevronDown,
+} from "lucide-react";
 import type { Card, CardFilters, CardType, FormatFilter, RarityFilter } from "../../types";
 import { searchCards } from "../../services";
 import { useAsync } from "../../hooks";
@@ -33,6 +38,7 @@ export function SearchPage() {
   const [type, setType] = useState<CardType | null>(null);
   const [format, setFormat] = useState<FormatFilter | null>(null);
   const [rarity, setRarity] = useState<RarityFilter | null>(null);
+  const [advOpen, setAdvOpen] = useState(false);
 
   const [committed, setCommitted] = useState<CardFilters | null>(null);
   const [page, setPage] = useState(1);
@@ -150,6 +156,9 @@ export function SearchPage() {
     [liveFilters],
   );
 
+  const advCount =
+    (type ? 1 : 0) + (format ? 1 : 0) + (rarity ? 1 : 0);
+
   const initialLoading = search.isLoading && page === 1;
   const loadingMore = search.isLoading && page > 1;
   const showEmptyResults =
@@ -221,7 +230,7 @@ export function SearchPage() {
               <ManaSymbol
                 key={color}
                 symbol={color}
-                size={34}
+                size={32}
                 selected={colors.has(color)}
                 onToggle={toggleColor}
               />
@@ -229,64 +238,88 @@ export function SearchPage() {
           </div>
         </fieldset>
 
-        <fieldset className={styles.group}>
-          <legend className={styles.legend}>Tipo de carta</legend>
-          <div className={styles.pillRow}>
-            {TYPE_OPTIONS.map((opt) => (
-              <button
-                key={opt.value}
-                type="button"
-                className={styles.pill}
-                data-active={type === opt.value}
-                aria-pressed={type === opt.value}
-                onClick={() => pickType(opt.value)}
-              >
-                {opt.label}
-              </button>
-            ))}
-          </div>
-        </fieldset>
+        <button
+          type="button"
+          className={styles.advToggle}
+          onClick={() => setAdvOpen((v) => !v)}
+          aria-expanded={advOpen}
+          aria-controls="adv-filters"
+        >
+          <span className={styles.advToggleLabel}>
+            <SlidersHorizontal size={14} aria-hidden="true" />
+            Filtros avanzados
+            {advCount > 0 ? (
+              <span className={styles.advBadge}>{advCount} activos</span>
+            ) : null}
+          </span>
+          <ChevronDown
+            size={16}
+            aria-hidden="true"
+            className={advOpen ? styles.chevOpen : styles.chev}
+          />
+        </button>
 
-        <fieldset className={styles.group}>
-          <legend className={styles.legend}>Formato</legend>
-          <div className={styles.pillRow}>
-            {FORMAT_OPTIONS.map((opt) => (
-              <button
-                key={opt.value}
-                type="button"
-                className={styles.pill}
-                data-active={format === opt.value}
-                aria-pressed={format === opt.value}
-                onClick={() => pickFormat(opt.value)}
-              >
-                {opt.label}
-              </button>
-            ))}
-          </div>
-        </fieldset>
+        {advOpen ? (
+          <div className={styles.advPanel} id="adv-filters">
+            <fieldset className={styles.group}>
+              <legend className={styles.legend}>Tipo de carta</legend>
+              <div className={styles.pillRow}>
+                {TYPE_OPTIONS.map((opt) => (
+                  <button
+                    key={opt.value}
+                    type="button"
+                    className={styles.pill}
+                    data-active={type === opt.value}
+                    aria-pressed={type === opt.value}
+                    onClick={() => pickType(opt.value)}
+                  >
+                    {opt.label}
+                  </button>
+                ))}
+              </div>
+            </fieldset>
 
-        <fieldset className={styles.group}>
-          <legend className={styles.legend}>Rareza</legend>
-          <div className={styles.pillRow}>
-            {RARITY_OPTIONS.map((opt) => (
-              <button
-                key={opt.value}
-                type="button"
-                className={styles.pill}
-                data-active={rarity === opt.value}
-                aria-pressed={rarity === opt.value}
-                onClick={() => pickRarity(opt.value)}
-              >
-                {opt.label}
-              </button>
-            ))}
+            <fieldset className={styles.group}>
+              <legend className={styles.legend}>Formato</legend>
+              <div className={styles.pillRow}>
+                {FORMAT_OPTIONS.map((opt) => (
+                  <button
+                    key={opt.value}
+                    type="button"
+                    className={styles.pill}
+                    data-active={format === opt.value}
+                    aria-pressed={format === opt.value}
+                    onClick={() => pickFormat(opt.value)}
+                  >
+                    {opt.label}
+                  </button>
+                ))}
+              </div>
+            </fieldset>
+
+            <fieldset className={styles.group}>
+              <legend className={styles.legend}>Rareza</legend>
+              <div className={styles.pillRow}>
+                {RARITY_OPTIONS.map((opt) => (
+                  <button
+                    key={opt.value}
+                    type="button"
+                    className={styles.pill}
+                    data-active={rarity === opt.value}
+                    aria-pressed={rarity === opt.value}
+                    onClick={() => pickRarity(opt.value)}
+                  >
+                    {opt.label}
+                  </button>
+                ))}
+              </div>
+            </fieldset>
           </div>
-        </fieldset>
+        ) : null}
 
         {activeCount > 0 ? (
           <div className={styles.filterFoot}>
             <span className={styles.filterCount}>
-              <SlidersHorizontal size={13} aria-hidden="true" />
               {activeCount} {activeCount === 1 ? "filtro activo" : "filtros activos"}
             </span>
             <button type="button" className={styles.clear} onClick={clearAll}>

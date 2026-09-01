@@ -2,15 +2,10 @@ import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft, Heart, RefreshCw, ExternalLink } from "lucide-react";
 import type { Card, CardFace } from "../types";
-import {
-  getCardById,
-  getCardImage,
-  getCardPrints,
-  getSetIconUrl,
-} from "../services";
+import { getCardById, getCardImage, getCardPrints } from "../services";
 import { useFetch, useHistory, useWishlist } from "../hooks";
 import { Spinner, ErrorState } from "../components/common";
-import { ManaCost, OracleText, rarityLabel } from "../components/cards";
+import { ManaCost, OracleText, SetIcon, rarityLabel } from "../components/cards";
 import { WishlistModal } from "../components/wishlist";
 import styles from "./CardDetailPage.module.css";
 
@@ -315,13 +310,10 @@ export function CardDetailPage() {
                           : styles.printRow
                       }
                     >
-                      <img
-                        src={print.set ? getSetIconUrl(print.set) : ""}
-                        alt=""
+                      <SetIcon
+                        setCode={print.set}
+                        size={22}
                         className={styles.setIcon}
-                        width={22}
-                        height={22}
-                        loading="lazy"
                       />
                       <span className={styles.printInfo}>
                         <span className={styles.printSet}>{print.set_name}</span>

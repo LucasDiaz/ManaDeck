@@ -67,3 +67,127 @@
   color: var(--text-muted);
   font-family: var(--font-mono);
 }
+
+/* ---- Wishlist rows ---- */
+.wishList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.wishItem {
+  display: flex;
+  align-items: stretch;
+  gap: var(--space-2);
+  max-width: 100%;
+}
+
+.wishLink {
+  display: flex;
+  gap: var(--space-3);
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-luminous);
+  background: var(--bg-glass);
+  color: var(--text-primary);
+  transition:
+    border-color var(--transition-base),
+    box-shadow var(--transition-base),
+    transform var(--transition-fast);
+}
+
+.wishLink:hover {
+  border-color: var(--border-strong);
+  box-shadow: var(--glow-primary);
+  color: var(--text-primary);
+}
+
+.wishLink:active {
+  transform: scale(0.99);
+}
+
+.thumb {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 64px;
+  flex-shrink: 0;
+  overflow: hidden;
+  border-radius: var(--radius-sm);
+  background: var(--bg-surface-elevated);
+}
+
+.thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.wishBody {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.wishName {
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-semibold);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.wishSet {
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.wishMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  margin-top: 2px;
+}
+
+.wishActions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  flex-shrink: 0;
+}
+
+.iconBtn {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  flex: 1;
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-luminous);
+  background: var(--bg-glass);
+  transition:
+    color var(--transition-base),
+    border-color var(--transition-base),
+    transform var(--transition-fast);
+}
+
+.iconBtn:hover {
+  color: var(--text-primary);
+  border-color: var(--border-strong);
+}
+
+.iconBtnDanger:hover {
+  color: var(--color-danger);
+  border-color: var(--color-danger);
+}
+
+.iconBtn:active {
+  transform: scale(0.92);
+}

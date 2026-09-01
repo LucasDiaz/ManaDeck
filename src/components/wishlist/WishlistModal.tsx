@@ -1,7 +1,7 @@
 import { useEffect, useId, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { X, Check, Heart } from "lucide-react";
-import type { Card, WishlistDraft } from "../../types";
+import type { Card, WishlistDraft, WishlistEntry } from "../../types";
 import { useWishlist } from "../../hooks";
 import styles from "./WishlistModal.module.css";
 
@@ -9,7 +9,10 @@ const NOTE_MAX = 200;
 const CATEGORY_MIN = 2;
 
 interface WishlistModalProps {
-  card: Card;
+  /** Add flow: the full card being wishlisted. */
+  card?: Card;
+  /** Edit flow: an existing wishlist entry (no full card needed). */
+  entry?: WishlistEntry;
   open: boolean;
   onClose: () => void;
   onSaved?: () => void;
@@ -57,12 +60,16 @@ function validate(
 /** Accessible modal to add a card to the wishlist with client-side validation. */
 export function WishlistModal({
   card,
+  entry,
   open,
   onClose,
   onSaved,
 }: WishlistModalProps) {
-  const { save, items } = useWishlist();
-  const existing = items.find((item) => item.id === card.id);
+  const { save, updateEntry, items } = useWishlist();
+
+  const targetId = card?.id ?? entry?.id ?? "";
+  const targetName = card?.name ?? entry?.name ?? "";
+  const existing = entry ?? items.find((item) => item.id === targetId);
 
   const titleId = useId();
   const dialogRef = useRef<HTMLDivElement>(null);
@@ -130,7 +137,7 @@ export function WishlistModal({
     };
   }, [open, onClose]);
 
-  if (!open) return null;
+  if (!open || (!card && !entry)) return null;
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
@@ -138,7 +145,9 @@ export function WishlistModal({
     setErrors(result.errors);
     if (!result.draft) return;
 
-    save(card, result.draft);
+    if (card) save(card, result.draft);
+    else if (entry) updateEntry(entry.id, result.draft);
+
     setSaved(true);
     onSaved?.();
     window.setTimeout(onClose, 900);
@@ -171,7 +180,7 @@ export function WishlistModal({
               <h2 id={titleId} className={styles.title}>
                 {existing ? "Editar deseo" : "Añadir a deseos"}
               </h2>
-              <p className={styles.cardName}>{card.name}</p>
+              <p className={styles.cardName}>{targetName}</p>
             </div>
           </div>
           <button

@@ -4,15 +4,23 @@ import { toCardSummary } from "../types";
 import { getCardImage } from "../services";
 import { createPersistentStore } from "../lib/persistentStore";
 
-const STORAGE_KEY = "manadeck:wishlist";
+const STORAGE_KEY = "manadeck_wishlist";
 
-const store = createPersistentStore<WishlistEntry[]>(STORAGE_KEY, []);
+const store = createPersistentStore<WishlistEntry[]>(STORAGE_KEY, [], {
+  legacyKey: "manadeck:wishlist",
+});
+
+const bySort = (a: WishlistEntry, b: WishlistEntry) =>
+  a.priority - b.priority || b.addedAt - a.addedAt;
 
 export interface UseWishlistResult {
   items: WishlistEntry[];
   has: (id: string) => boolean;
+  get: (id: string) => WishlistEntry | undefined;
   /** Add or replace the wishlist entry for a card. Returns the saved entry. */
   save: (card: Card, draft: WishlistDraft) => WishlistEntry;
+  /** Update only the metadata of an existing entry (edit flow). */
+  updateEntry: (id: string, draft: WishlistDraft) => void;
   remove: (id: string) => void;
   clear: () => void;
 }
@@ -30,7 +38,13 @@ export function useWishlist(): UseWishlistResult {
     [],
   );
 
+  const get = useCallback(
+    (id: string) => store.get().find((item) => item.id === id),
+    [],
+  );
+
   const save = useCallback((card: Card, draft: WishlistDraft): WishlistEntry => {
+    const previous = store.get().find((item) => item.id === card.id);
     const entry: WishlistEntry = {
       ...toCardSummary(
         card,
@@ -39,15 +53,29 @@ export function useWishlist(): UseWishlistResult {
       priority: draft.priority,
       category: draft.category.trim(),
       note: draft.note?.trim() || undefined,
-      addedAt: Date.now(),
+      addedAt: previous?.addedAt ?? Date.now(),
     };
-    store.update((current) => {
-      const without = current.filter((item) => item.id !== entry.id);
-      return [entry, ...without].sort(
-        (a, b) => a.priority - b.priority || b.addedAt - a.addedAt,
-      );
-    });
+    store.update((current) =>
+      [entry, ...current.filter((item) => item.id !== entry.id)].sort(bySort),
+    );
     return entry;
+  }, []);
+
+  const updateEntry = useCallback((id: string, draft: WishlistDraft) => {
+    store.update((current) =>
+      current
+        .map((item) =>
+          item.id === id
+            ? {
+                ...item,
+                priority: draft.priority,
+                category: draft.category.trim(),
+                note: draft.note?.trim() || undefined,
+              }
+            : item,
+        )
+        .sort(bySort),
+    );
   }, []);
 
   const remove = useCallback((id: string) => {
@@ -56,5 +84,5 @@ export function useWishlist(): UseWishlistResult {
 
   const clear = useCallback(() => store.set([]), []);
 
-  return { items, has, save, remove, clear };
+  return { items, has, get, save, updateEntry, remove, clear };
 }
