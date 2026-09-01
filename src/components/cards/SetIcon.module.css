@@ -1,0 +1,11 @@
+.icon {
+  flex-shrink: 0;
+  display: block;
+  color: var(--text-secondary);
+  /* Scryfall set SVGs are solid black — invert to sit on the dark theme. */
+  filter: brightness(0) invert(0.82);
+}
+
+svg.icon {
+  filter: none;
+}

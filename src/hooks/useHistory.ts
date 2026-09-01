@@ -4,10 +4,12 @@ import { toCardSummary } from "../types";
 import { getCardImage } from "../services";
 import { createPersistentStore } from "../lib/persistentStore";
 
-const STORAGE_KEY = "manadeck:history";
+const STORAGE_KEY = "manadeck_history";
 const MAX_ENTRIES = 60;
 
-const store = createPersistentStore<HistoryEntry[]>(STORAGE_KEY, []);
+const store = createPersistentStore<HistoryEntry[]>(STORAGE_KEY, [], {
+  legacyKey: "manadeck:history",
+});
 
 export interface UseHistoryResult {
   history: HistoryEntry[];

@@ -1,6 +1,7 @@
 export { CardCard } from "./CardCard";
 export { CardCardSkeleton } from "./CardCardSkeleton";
 export { CardGrid } from "./CardGrid";
+export { SetIcon } from "./SetIcon";
 export { ManaSymbol } from "./ManaSymbol";
 export type { ManaSymbolCode } from "./ManaSymbol";
 export { manaSymbolLabel } from "./manaLabels";

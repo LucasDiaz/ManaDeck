@@ -16,18 +16,28 @@ export interface HistoryEntry extends CardSummary {
   viewedAt: number;
 }
 
-/** One saved wishlist entry, with the user's deck-building metadata. */
-export interface WishlistEntry extends CardSummary {
+/** One card saved inside a wishlist collection, with deck-building metadata. */
+export interface WishlistItem extends CardSummary {
   priority: number;
-  category: string;
   note?: string;
   addedAt: number;
 }
 
-/** Fields the WishlistModal collects from the user. */
+/**
+ * A named group of wanted cards — e.g. "Commander Deck: Atraxa",
+ * "Modern Staples", "Trades / Sideboard".
+ */
+export interface WishlistCollection {
+  id: string;
+  name: string;
+  description?: string;
+  createdAt: number;
+  items: WishlistItem[];
+}
+
+/** Fields the wishlist form collects for one card (collection chosen separately). */
 export interface WishlistDraft {
   priority: number;
-  category: string;
   note?: string;
 }
 

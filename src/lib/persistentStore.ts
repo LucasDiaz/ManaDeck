@@ -9,11 +9,31 @@ export interface PersistentStore<T> {
   subscribe: (listener: () => void) => () => void;
 }
 
+export interface PersistentStoreOptions {
+  /** Old storage key to migrate from, once, if the new key has no value yet. */
+  legacyKey?: string;
+}
+
 export function createPersistentStore<T>(
   key: string,
   fallback: T,
+  options: PersistentStoreOptions = {},
 ): PersistentStore<T> {
   const listeners = new Set<() => void>();
+
+  // One-time migration from a previous storage key.
+  try {
+    if (
+      options.legacyKey &&
+      localStorage.getItem(key) === null &&
+      localStorage.getItem(options.legacyKey) !== null
+    ) {
+      localStorage.setItem(key, localStorage.getItem(options.legacyKey) as string);
+      localStorage.removeItem(options.legacyKey);
+    }
+  } catch {
+    // ignore — storage unavailable
+  }
 
   const read = (): T => {
     try {

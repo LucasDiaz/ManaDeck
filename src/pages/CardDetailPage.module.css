@@ -361,7 +361,6 @@
 
 .setIcon {
   flex-shrink: 0;
-  filter: brightness(0) invert(0.85);
 }
 
 .printInfo {

@@ -2,15 +2,10 @@ import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft, Heart, RefreshCw, ExternalLink } from "lucide-react";
 import type { Card, CardFace } from "../types";
-import {
-  getCardById,
-  getCardImage,
-  getCardPrints,
-  getSetIconUrl,
-} from "../services";
+import { getCardById, getCardImage, getCardPrints } from "../services";
 import { useFetch, useHistory, useWishlist } from "../hooks";
 import { Spinner, ErrorState } from "../components/common";
-import { ManaCost, OracleText, rarityLabel } from "../components/cards";
+import { ManaCost, OracleText, SetIcon, rarityLabel } from "../components/cards";
 import { WishlistModal } from "../components/wishlist";
 import styles from "./CardDetailPage.module.css";
 
@@ -46,7 +41,7 @@ export function CardDetailPage() {
   const { id = "" } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { logVisit } = useHistory();
-  const { has } = useWishlist();
+  const { hasCard } = useWishlist();
 
   const card = useFetch<Card>(
     (signal) => getCardById(id, { signal }),
@@ -180,18 +175,18 @@ export function CardDetailPage() {
                 <button
                   type="button"
                   className={
-                    has(data.id)
+                    hasCard(data.id)
                       ? `${styles.wishBtn} ${styles.wishBtnActive}`
                       : styles.wishBtn
                   }
                   onClick={() => setModalOpen(true)}
                 >
-                  {has(data.id) ? (
+                  {hasCard(data.id) ? (
                     <Heart size={16} aria-hidden="true" fill="currentColor" />
                   ) : (
                     <Heart size={16} aria-hidden="true" />
                   )}
-                  {has(data.id) ? "En tu lista" : "Añadir a deseos"}
+                  {hasCard(data.id) ? "En tu lista" : "Añadir a deseos"}
                 </button>
                 {data.scryfall_uri ? (
                   <a
@@ -315,13 +310,10 @@ export function CardDetailPage() {
                           : styles.printRow
                       }
                     >
-                      <img
-                        src={print.set ? getSetIconUrl(print.set) : ""}
-                        alt=""
+                      <SetIcon
+                        setCode={print.set}
+                        size={22}
                         className={styles.setIcon}
-                        width={22}
-                        height={22}
-                        loading="lazy"
                       />
                       <span className={styles.printInfo}>
                         <span className={styles.printSet}>{print.set_name}</span>

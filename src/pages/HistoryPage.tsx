@@ -4,15 +4,19 @@ import { EntryRow } from "../components/collections";
 import { useHistory } from "../hooks";
 import styles from "./Collection.module.css";
 
+const plural = (n: number, one: string, many: string) =>
+  `Hace ${n} ${n === 1 ? one : many}`;
+
 const relativeTime = (ms: number): string => {
-  const diff = Date.now() - ms;
-  const mins = Math.round(diff / 60000);
-  if (mins < 1) return "hace un momento";
-  if (mins < 60) return `hace ${mins} min`;
-  const hours = Math.round(mins / 60);
-  if (hours < 24) return `hace ${hours} h`;
-  const days = Math.round(hours / 24);
-  return `hace ${days} d`;
+  const mins = Math.floor((Date.now() - ms) / 60000);
+  if (mins < 1) return "Hace un momento";
+  if (mins < 60) return plural(mins, "minuto", "minutos");
+  const hours = Math.floor(mins / 60);
+  if (hours < 24) return plural(hours, "hora", "horas");
+  const days = Math.floor(hours / 24);
+  if (days < 7) return plural(days, "día", "días");
+  const weeks = Math.floor(days / 7);
+  return plural(weeks, "semana", "semanas");
 };
 
 /** Recently viewed cards, newest first (RF4). */
