@@ -41,7 +41,7 @@ export function CardDetailPage() {
   const { id = "" } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { logVisit } = useHistory();
-  const { has } = useWishlist();
+  const { hasCard } = useWishlist();
 
   const card = useFetch<Card>(
     (signal) => getCardById(id, { signal }),
@@ -175,18 +175,18 @@ export function CardDetailPage() {
                 <button
                   type="button"
                   className={
-                    has(data.id)
+                    hasCard(data.id)
                       ? `${styles.wishBtn} ${styles.wishBtnActive}`
                       : styles.wishBtn
                   }
                   onClick={() => setModalOpen(true)}
                 >
-                  {has(data.id) ? (
+                  {hasCard(data.id) ? (
                     <Heart size={16} aria-hidden="true" fill="currentColor" />
                   ) : (
                     <Heart size={16} aria-hidden="true" />
                   )}
-                  {has(data.id) ? "En tu lista" : "Añadir a deseos"}
+                  {hasCard(data.id) ? "En tu lista" : "Añadir a deseos"}
                 </button>
                 {data.scryfall_uri ? (
                   <a

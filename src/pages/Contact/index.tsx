@@ -1,13 +1,38 @@
-import { Code2, Mail, Globe, MapPin } from "lucide-react";
-import { PageHeader } from "../../components/common";
+import { useMemo } from "react";
+import { Code2, Mail, Globe, MapPin, LocateFixed } from "lucide-react";
+import { PageHeader, ErrorState, Spinner } from "../../components/common";
+import { VenuesMap, venueCategoryColor, venueCategoryLabel, VENUE_CATEGORIES } from "../../components/map";
+import { useTcgVenues, useGeolocation } from "../../hooks";
+import type { GeolocationStatus } from "../../hooks";
 import styles from "./Contact.module.css";
 
-const LA_PLATA = { lat: -34.9215, lon: -57.9536 };
-const OSM_EMBED =
-  "https://www.openstreetmap.org/export/embed.html?bbox=-57.9636%2C-34.9315%2C-57.9436%2C-34.9115&layer=mapnik&marker=-34.9215%2C-57.9536";
-const OSM_LINK = `https://www.openstreetmap.org/?mlat=${LA_PLATA.lat}&mlon=${LA_PLATA.lon}#map=16/${LA_PLATA.lat}/${LA_PLATA.lon}`;
+const DEFAULT_CENTER = { lat: -34.9214, lon: -57.9545 };
+const SEARCH_RADIUS_METERS = 5000;
+
+const GEO_STATUS_MESSAGE: Partial<Record<GeolocationStatus, string>> = {
+  denied:
+    "Permiso de ubicación denegado: mostrando comercios cerca de La Plata.",
+  error: "No pudimos obtener tu ubicación: mostrando comercios cerca de La Plata.",
+  unsupported: "Tu navegador no admite geolocalización.",
+};
 
 export function ContactPage() {
+  const geo = useGeolocation();
+  const center = geo.coords ?? DEFAULT_CENTER;
+  const isUserLocation = geo.status === "success";
+
+  const { venues, isLoading, isError, error, usingFallback, refetch } = useTcgVenues({
+    lat: center.lat,
+    lon: center.lon,
+    radiusMeters: SEARCH_RADIUS_METERS,
+  });
+
+  const osmLink = useMemo(
+    () =>
+      `https://www.openstreetmap.org/?mlat=${center.lat}&mlon=${center.lon}#map=13/${center.lat}/${center.lon}`,
+    [center.lat, center.lon],
+  );
+
   return (
     <section className={styles.section} aria-labelledby="contact-title">
       <PageHeader
@@ -24,7 +49,7 @@ export function ContactPage() {
         <dl className={styles.facts}>
           <div>
             <dt>Desarrollo</dt>
-            <dd>Lautaro Sardina</dd>
+            <dd>Lautaro Sardina, Lucas Díaz</dd>
           </div>
           <div>
             <dt>Datos de cartas</dt>
@@ -71,23 +96,93 @@ export function ContactPage() {
       <div className={styles.mapBlock}>
         <div className={styles.mapHead}>
           <MapPin size={16} aria-hidden="true" />
-          Catedral de La Plata
+          Dónde jugar cerca tuyo
           <span className={styles.coords}>
-            {LA_PLATA.lat}, {LA_PLATA.lon}
+            {center.lat.toFixed(4)}, {center.lon.toFixed(4)}
           </span>
         </div>
-        <div className={styles.mapFrame}>
-          <iframe
-            className={styles.map}
-            title="Mapa centrado en la Catedral de La Plata"
-            src={OSM_EMBED}
-            loading="lazy"
-            referrerPolicy="no-referrer-when-downgrade"
-          />
+        <p className={styles.mapSubtitle}>
+          Tiendas de juegos, TCG, anime y comics a {SEARCH_RADIUS_METERS / 1000} km a
+          la redonda, obtenidas en vivo de OpenStreetMap.
+        </p>
+
+        <div className={styles.locateRow}>
+          <button
+            type="button"
+            className={styles.locateBtn}
+            onClick={geo.locate}
+            disabled={geo.isLocating}
+          >
+            {geo.isLocating ? (
+              <span className={styles.miniSpinner} aria-hidden="true" />
+            ) : (
+              <LocateFixed size={15} aria-hidden="true" />
+            )}
+            {geo.isLocating ? "Ubicando…" : "Usar mi ubicación"}
+          </button>
+          {geo.error ? (
+            <p className={styles.geoNotice} role="status">
+              {GEO_STATUS_MESSAGE[geo.status] ?? geo.error}
+            </p>
+          ) : null}
         </div>
+
+        {isLoading ? (
+          <div className={styles.mapLoading}>
+            <Spinner label="Buscando comercios cercanos…" showLabel />
+          </div>
+        ) : (
+          <>
+            {isError ? (
+              <ErrorState
+                title="No se pudo consultar OpenStreetMap"
+                error={error}
+                onRetry={refetch}
+              />
+            ) : null}
+
+            {usingFallback ? (
+              <p className={styles.fallbackNotice} role="status">
+                Mostrando una lista de referencia local: no se pudo conectar con
+                Overpass en este momento.
+              </p>
+            ) : null}
+
+            <div className={styles.mapFrame}>
+              <VenuesMap
+                center={center}
+                venues={venues}
+                isUserLocation={isUserLocation}
+                accuracy={geo.coords?.accuracy}
+                fallbackLabel="La Plata (ubicación predeterminada)"
+              />
+            </div>
+
+            {venues.length === 0 && !isError ? (
+              <p className={styles.emptyNotice}>
+                No encontramos comercios registrados en OpenStreetMap dentro del
+                radio de búsqueda.
+              </p>
+            ) : (
+              <ul className={styles.legend}>
+                {VENUE_CATEGORIES.map((category) => (
+                  <li key={category} className={styles.legendItem}>
+                    <span
+                      className={styles.legendDot}
+                      style={{ background: venueCategoryColor(category) }}
+                      aria-hidden="true"
+                    />
+                    {venueCategoryLabel(category)}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </>
+        )}
+
         <a
           className={styles.mapLink}
-          href={OSM_LINK}
+          href={osmLink}
           target="_blank"
           rel="noreferrer"
         >

@@ -119,6 +119,79 @@
   color: var(--text-muted);
 }
 
+.mapSubtitle {
+  margin: 0;
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  line-height: var(--leading-relaxed);
+}
+
+.locateRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+}
+
+.locateBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-pill);
+  font-size: var(--text-xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--accent-secondary-bright);
+  border: 1px solid var(--border-luminous);
+  background: var(--bg-glass);
+  transition:
+    border-color var(--transition-base),
+    transform var(--transition-fast),
+    opacity var(--transition-base);
+}
+
+.locateBtn:hover:not(:disabled) {
+  border-color: var(--border-strong);
+  box-shadow: var(--glow-secondary);
+}
+
+.locateBtn:active:not(:disabled) {
+  transform: scale(0.96);
+}
+
+.locateBtn:disabled {
+  opacity: 0.7;
+  cursor: default;
+}
+
+.miniSpinner {
+  width: 13px;
+  height: 13px;
+  flex-shrink: 0;
+  border-radius: var(--radius-pill);
+  border: 2px solid rgba(111, 184, 214, 0.25);
+  border-top-color: var(--accent-secondary-bright);
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .miniSpinner {
+    animation-duration: 1.6s;
+  }
+}
+
+.geoNotice {
+  margin: 0;
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
 .mapFrame {
   overflow: hidden;
   border-radius: var(--radius-lg);
@@ -127,13 +200,54 @@
   background: var(--bg-surface);
 }
 
-.map {
-  display: block;
-  width: 100%;
-  height: 300px;
-  border: 0;
-  /* Dark-mode treatment for the light OSM tiles. */
-  filter: invert(90%) hue-rotate(180deg) brightness(85%) contrast(120%);
+.mapLoading {
+  display: grid;
+  place-items: center;
+  height: 320px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-luminous);
+  background: var(--bg-surface);
+}
+
+.fallbackNotice {
+  margin: 0;
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-luminous);
+  background: var(--color-warning-soft, rgba(240, 178, 75, 0.12));
+  color: var(--text-secondary);
+  font-size: var(--text-xs);
+  line-height: var(--leading-relaxed);
+}
+
+.emptyNotice {
+  margin: 0;
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+}
+
+.legendDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
 }
 
 .mapLink {

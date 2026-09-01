@@ -1,0 +1,126 @@
+.mapContainer {
+  width: 100%;
+  height: 320px;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+/* The container div also receives Leaflet's own "leaflet-container" class
+   at runtime — compound selector (no space) targets that same element. */
+.mapContainer:global(.leaflet-container) {
+  background: var(--bg-surface);
+  font-family: var(--font-sans);
+}
+
+/* Invert only the tile layer so markers/popups keep their real colors on
+   the dark theme (same trick the old iframe embed used, scoped tighter). */
+.mapContainer :global(.leaflet-tile-pane) {
+  filter: invert(90%) hue-rotate(180deg) brightness(85%) contrast(120%);
+}
+
+.mapContainer :global(.leaflet-control-zoom a) {
+  background: var(--bg-surface-elevated);
+  color: var(--text-primary);
+  border-color: var(--border-strong);
+}
+
+.mapContainer :global(.leaflet-control-zoom a:hover) {
+  background: var(--bg-surface);
+}
+
+.mapContainer :global(.leaflet-control-attribution) {
+  background: var(--bg-glass);
+  color: var(--text-muted);
+}
+
+.mapContainer :global(.leaflet-control-attribution a) {
+  color: var(--accent-secondary-bright);
+}
+
+.mapContainer :global(.leaflet-popup-content-wrapper) {
+  background: var(--bg-surface-elevated);
+  color: var(--text-primary);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+}
+
+.mapContainer :global(.leaflet-popup-tip) {
+  background: var(--bg-surface-elevated);
+}
+
+.mapContainer :global(.leaflet-popup-close-button) {
+  color: var(--text-secondary);
+}
+
+/* ---- Popup content (built via document.createElement, see VenuesMap.tsx) */
+.popup {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: var(--text-sm);
+  max-width: 220px;
+}
+
+.popup strong {
+  color: var(--text-primary);
+}
+
+.popupMeta {
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+}
+
+/* ---- Custom divIcon markers ---- */
+.venueMarker span {
+  display: block;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid var(--bg-main);
+  box-shadow: var(--shadow-sm);
+}
+
+.referenceMarker span {
+  display: block;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--text-primary);
+  border: 2px solid var(--accent-primary);
+  box-shadow: var(--glow-primary);
+}
+
+.userMarker span {
+  display: block;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--accent-secondary-bright);
+  border: 2px solid var(--text-primary);
+  box-shadow: var(--glow-secondary);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    box-shadow: var(--glow-secondary);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(79, 149, 177, 0.25);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .userMarker span {
+    animation: none;
+  }
+}
+
+/* Accuracy radius circle drawn via L.circle({ className: styles.accuracyCircle }). */
+.accuracyCircle {
+  stroke: var(--accent-secondary-bright);
+  stroke-width: 1;
+  fill: var(--accent-secondary-bright);
+  fill-opacity: 0.12;
+}
