@@ -34,6 +34,11 @@
   margin-inline: auto;
 }
 
+/* Brand mark — only shown in desktop rail mode. */
+.brand {
+  display: none;
+}
+
 .list {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
@@ -110,4 +115,141 @@
     var(--accent-secondary)
   );
   box-shadow: var(--glow-primary);
+}
+
+/* =============================================================
+   Desktop (>= 1024px): the fixed bottom bar becomes a sticky,
+   full-height vertical navigation rail docked to the left edge.
+   ============================================================= */
+@media (min-width: 1024px) {
+  .bar {
+    inset-inline: 0 auto;
+    inset-block: 0;
+    width: var(--nav-rail-width);
+    padding-bottom: 0;
+    border-top: none;
+    border-right: 1px solid var(--border-luminous);
+    box-shadow: var(--shadow-rail);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  /* Neon accent bar runs down the rail's right edge. */
+  .bar::before {
+    inset-inline: auto 0;
+    inset-block: 0;
+    width: 2px;
+    height: auto;
+    background: linear-gradient(
+      180deg,
+      transparent,
+      var(--accent-primary) 25%,
+      var(--accent-glow) 50%,
+      var(--accent-secondary) 75%,
+      transparent
+    );
+  }
+
+  .nav {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+    min-height: 100%;
+    max-width: none;
+    margin-inline: 0;
+    padding: var(--space-4) var(--space-3);
+  }
+
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-3);
+    color: var(--text-primary);
+  }
+
+  .brand:hover {
+    color: var(--text-primary);
+  }
+
+  .brandMark {
+    display: grid;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0;
+    border-radius: var(--radius-sm);
+    color: var(--text-on-accent);
+    background: linear-gradient(
+      135deg,
+      var(--accent-primary),
+      var(--accent-secondary)
+    );
+    box-shadow: var(--glow-primary);
+  }
+
+  .brandWord {
+    font-size: var(--text-lg);
+    font-weight: var(--font-weight-bold);
+    letter-spacing: -0.01em;
+  }
+
+  .brandAccent {
+    color: var(--accent-glow);
+  }
+
+  .list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  .item {
+    display: block;
+  }
+
+  .link {
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: var(--space-3);
+    min-height: 0;
+    padding: var(--space-3);
+    border-radius: var(--radius-md);
+  }
+
+  .link:active {
+    transform: scale(0.98);
+  }
+
+  .iconWrap {
+    width: 26px;
+    height: 26px;
+  }
+
+  .label {
+    font-size: var(--text-sm);
+  }
+
+  /* Active route: filled pill + vertical marker on the left edge. */
+  .active {
+    background: var(--color-accent-soft);
+  }
+
+  .active .iconWrap {
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .active::before {
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 60%;
+    background: linear-gradient(
+      180deg,
+      var(--accent-primary),
+      var(--accent-secondary)
+    );
+  }
 }

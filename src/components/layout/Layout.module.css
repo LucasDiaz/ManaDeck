@@ -17,3 +17,12 @@
   margin-inline: auto;
   padding-inline: var(--space-4);
 }
+
+/* Desktop: the bottom bar becomes a left rail — drop the bottom reservation
+   and offset content clear of the fixed rail. */
+@media (min-width: 1024px) {
+  .main {
+    padding-block: var(--space-6) var(--space-8);
+    padding-left: var(--nav-rail-width);
+  }
+}

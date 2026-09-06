@@ -65,3 +65,10 @@
 .accent {
   color: var(--accent-glow);
 }
+
+/* Desktop: the brand lives in the left navigation rail instead. */
+@media (min-width: 1024px) {
+  .header {
+    display: none;
+  }
+}
