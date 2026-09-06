@@ -118,10 +118,12 @@
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.45);
   --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.5);
   --shadow-nav: 0 -6px 28px rgba(0, 0, 0, 0.55);
+  --shadow-rail: 6px 0 28px rgba(0, 0, 0, 0.45);
 
   /* ---- Layout ------------------------------------- */
   --layout-max-width: 480px;
   --nav-max-width: 480px;
+  --nav-rail-width: 216px;        /* desktop left navigation rail */
   --header-height: 54px;
   --bottom-nav-height: 62px;
   --safe-bottom: env(safe-area-inset-bottom, 0px);

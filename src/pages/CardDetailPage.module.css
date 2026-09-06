@@ -449,3 +449,10 @@
     padding-top: var(--space-2);
   }
 }
+
+/* Desktop has no top header (nav is a left rail) — sit the sticky art higher. */
+@media (min-width: 1024px) {
+  .artWrap {
+    top: var(--space-5);
+  }
+}
