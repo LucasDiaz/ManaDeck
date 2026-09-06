@@ -1,5 +1,6 @@
 import { Outlet } from "react-router-dom";
 import { useScrollToTop } from "../../hooks";
+import { OfflineBanner } from "../common";
 import { AppHeader } from "./AppHeader";
 import { BottomNav } from "./BottomNav";
 import styles from "./Layout.module.css";
@@ -17,6 +18,7 @@ export function Layout() {
         </div>
       </main>
       <BottomNav />
+      <OfflineBanner />
     </div>
   );
 }

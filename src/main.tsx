@@ -12,3 +12,13 @@ createRoot(document.getElementById("root")!).render(
     </BrowserRouter>
   </StrictMode>,
 );
+
+// Register the service worker (production builds only — the dev server
+// serves modules that must not be cached).
+if (import.meta.env.PROD && "serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("/sw.js").catch(() => {
+      // Registration failures are non-fatal — the app still works online.
+    });
+  });
+}
