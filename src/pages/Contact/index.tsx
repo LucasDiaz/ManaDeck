@@ -6,13 +6,14 @@ import { useTcgVenues, useGeolocation } from "../../hooks";
 import type { GeolocationStatus } from "../../hooks";
 import styles from "./Contact.module.css";
 
-const DEFAULT_CENTER = { lat: -34.9214, lon: -57.9545 };
+const DEFAULT_CENTER = { lat: -34.7744, lon: -58.2678 };
 const SEARCH_RADIUS_METERS = 5000;
 
 const GEO_STATUS_MESSAGE: Partial<Record<GeolocationStatus, string>> = {
   denied:
-    "Permiso de ubicación denegado: mostrando comercios cerca de La Plata.",
-  error: "No pudimos obtener tu ubicación: mostrando comercios cerca de La Plata.",
+    "Permiso de ubicación denegado: mostrando comercios cerca de la UNAJ (Florencio Varela).",
+  error:
+    "No pudimos obtener tu ubicación: mostrando comercios cerca de la UNAJ (Florencio Varela).",
   unsupported: "Tu navegador no admite geolocalización.",
 };
 
@@ -57,7 +58,7 @@ export function ContactPage() {
           </div>
           <div>
             <dt>Ubicación</dt>
-            <dd>La Plata, Buenos Aires, Argentina</dd>
+            <dd>Universidad Nacional Arturo Jauretche (UNAJ), Florencio Varela, Buenos Aires, Argentina</dd>
           </div>
         </dl>
       </div>
@@ -154,7 +155,7 @@ export function ContactPage() {
                 venues={venues}
                 isUserLocation={isUserLocation}
                 accuracy={geo.coords?.accuracy}
-                fallbackLabel="La Plata (ubicación predeterminada)"
+                fallbackLabel="UNAJ, Florencio Varela (ubicación predeterminada)"
               />
             </div>
 

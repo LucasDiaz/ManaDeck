@@ -134,6 +134,11 @@
   --ease-out-back: cubic-bezier(0.34, 1.4, 0.64, 1);
 
   /* ---- Z-index ---------------------------------- */
+  /* Leaflet ships its own internal z-indices (tile/overlay/marker/popup
+     panes up to ~700, .leaflet-top/.leaflet-bottom controls at 1000) that
+     would otherwise outrank the persistent nav shell. VenuesMap.module.css
+     rescopes every Leaflet pane/control under this ceiling. */
+  --z-map-controls: 80;
   --z-header: 100;
   --z-bottom-nav: 200;
   --z-overlay: 300;

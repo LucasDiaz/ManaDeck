@@ -94,30 +94,131 @@
   color: var(--text-muted);
 }
 
-/* Full-width row so the <select> never nests inside the item's <Link>. */
-.moveRow {
+/* ---- Active deck header (edit/delete for the selected deck only) ---- */
+.activeDeckHeadWrap {
   display: flex;
-  align-items: center;
+  flex-direction: column;
   gap: var(--space-2);
-  padding: 0 var(--space-1);
-  font-size: var(--text-xs);
-  color: var(--text-muted);
 }
 
-.moveSelect {
-  flex: 1;
-  min-width: 0;
-  padding: 6px var(--space-2);
+.activeDeckHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2) var(--space-3);
+  padding: var(--space-2) var(--space-3);
   border-radius: var(--radius-md);
-  font-size: var(--text-xs);
-  color: var(--text-secondary);
   border: 1px solid var(--border-luminous);
   background: var(--bg-glass);
 }
 
-.moveSelect:hover {
+/* Compact icon-only pair, right-aligned next to the deck title. */
+.deckIconActions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  flex-shrink: 0;
+}
+
+.deckIconBtn {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  border-radius: var(--radius-pill);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-luminous);
+  background: var(--bg-main);
+  transition:
+    color var(--transition-base),
+    border-color var(--transition-base),
+    transform var(--transition-fast);
+}
+
+.deckIconBtn:hover {
   color: var(--text-primary);
   border-color: var(--border-strong);
+}
+
+.deckIconBtn:active {
+  transform: scale(0.92);
+}
+
+.deckIconBtnDanger:hover {
+  color: var(--color-danger);
+  border-color: var(--color-danger);
+}
+
+.deckIconBtnDanger[aria-expanded="true"] {
+  color: var(--color-danger);
+  border-color: var(--color-danger);
+  background: var(--color-danger-soft);
+}
+
+.deckActionBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-pill);
+  font-size: var(--text-xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-luminous);
+  background: var(--bg-main);
+  transition:
+    color var(--transition-base),
+    border-color var(--transition-base),
+    transform var(--transition-fast);
+}
+
+.deckActionBtn:hover {
+  color: var(--text-primary);
+  border-color: var(--border-strong);
+}
+
+.deckActionBtn:active {
+  transform: scale(0.96);
+}
+
+.deckActionDanger {
+  color: var(--color-danger);
+  border-color: var(--color-danger-soft);
+}
+
+.deckActionDanger:hover {
+  color: var(--color-danger);
+  border-color: var(--color-danger);
+}
+
+.confirmRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.confirmText {
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+}
+
+.renameInput {
+  flex: 1;
+  min-width: 120px;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-strong);
+  background: var(--bg-main);
+  color: var(--text-primary);
+  font-size: var(--text-base);
+}
+
+.renameInput:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+  box-shadow: var(--glow-primary);
 }
 
 /* ---- Wishlist rows ---- */
@@ -129,15 +230,9 @@
 
 .wishItem {
   display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-  max-width: 100%;
-}
-
-.wishItemMain {
-  display: flex;
   align-items: stretch;
   gap: var(--space-2);
+  max-width: 100%;
 }
 
 .wishLink {
