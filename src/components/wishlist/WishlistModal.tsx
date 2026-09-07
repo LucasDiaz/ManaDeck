@@ -1,14 +1,12 @@
 import { type FormEvent, useEffect, useId, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { X, Check, Heart } from "lucide-react";
+import { X, Check, Heart, Plus, ChevronDown } from "lucide-react";
 import type { Card, WishlistDraft, WishlistItem } from "../../types";
 import { useWishlist } from "../../hooks";
 import styles from "./WishlistModal.module.css";
 
 const NOTE_MAX = 200;
 const COLLECTION_NAME_MIN = 2;
-/** Sentinel `<select>` value meaning "create a new collection on the fly". */
-const NEW_COLLECTION_VALUE = "__new__";
 
 export interface WishlistEditTarget {
   collectionId: string;
@@ -34,14 +32,12 @@ interface FieldErrors {
 interface ValidatedFields {
   draft: WishlistDraft;
   collectionId: string;
-  newCollectionName?: string;
 }
 
 function validate(
   priorityRaw: string,
   note: string,
   collectionId: string,
-  newCollectionName: string,
 ): { errors: FieldErrors; result?: ValidatedFields } {
   const errors: FieldErrors = {};
 
@@ -52,11 +48,8 @@ function validate(
     errors.priority = "Debe ser un número mayor que 0.";
   }
 
-  const creatingNew = collectionId === NEW_COLLECTION_VALUE;
   if (!collectionId) {
-    errors.collection = "Elegí una colección.";
-  } else if (creatingNew && newCollectionName.trim().length < COLLECTION_NAME_MIN) {
-    errors.collection = `Mínimo ${COLLECTION_NAME_MIN} caracteres.`;
+    errors.collection = "Elegí o creá una colección.";
   }
 
   if (note.length > NOTE_MAX) {
@@ -69,7 +62,6 @@ function validate(
     result: {
       draft: { priority, note: note.trim() || undefined },
       collectionId,
-      newCollectionName: creatingNew ? newCollectionName.trim() : undefined,
     },
   };
 }
@@ -77,22 +69,30 @@ function validate(
 /**
  * Accessible modal to add or edit a wishlist card. In the add flow the user
  * picks an existing collection or creates one on the fly; in the edit flow
- * the collection is fixed (moving between collections happens from the
- * Wishlist page itself, see `moveCard`).
+ * the same `<select>` doubles as a "move to another deck" control (submit
+ * calls `moveCard` when it no longer matches the item's original deck).
  */
 export function WishlistModal({ card, editing, open, onClose, onSaved }: WishlistModalProps) {
-  const { collections, activeCollectionId, createCollection, addCardToCollection, updateCardInCollection } =
-    useWishlist();
+  const {
+    collections,
+    activeCollectionId,
+    createCollection,
+    addCardToCollection,
+    updateCardInCollection,
+    moveCard,
+  } = useWishlist();
 
   const targetName = card?.name ?? editing?.item.name ?? "";
 
   const titleId = useId();
   const dialogRef = useRef<HTMLDivElement>(null);
   const openerRef = useRef<Element | null>(null);
+  const newCollectionInputRef = useRef<HTMLInputElement>(null);
 
   const [priority, setPriority] = useState("");
   const [note, setNote] = useState("");
   const [collectionId, setCollectionId] = useState("");
+  const [creatingCollection, setCreatingCollection] = useState(false);
   const [newCollectionName, setNewCollectionName] = useState("");
   const [errors, setErrors] = useState<FieldErrors>({});
   const [saved, setSaved] = useState(false);
@@ -107,14 +107,20 @@ export function WishlistModal({ card, editing, open, onClose, onSaved }: Wishlis
     } else {
       setPriority("1");
       setNote("");
-      setCollectionId(activeCollectionId ?? collections[0]?.id ?? NEW_COLLECTION_VALUE);
+      setCollectionId(activeCollectionId ?? collections[0]?.id ?? "");
     }
+    setCreatingCollection(false);
     setNewCollectionName("");
     setErrors({});
     setSaved(false);
     openerRef.current = document.activeElement;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
+
+  // Auto-focus the inline "new collection" input the moment it appears.
+  useEffect(() => {
+    if (creatingCollection) newCollectionInputRef.current?.focus();
+  }, [creatingCollection]);
 
   // Body scroll lock + Esc + focus management while open.
   useEffect(() => {
@@ -164,17 +170,17 @@ export function WishlistModal({ card, editing, open, onClose, onSaved }: Wishlis
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
-    const { errors: fieldErrors, result } = validate(priority, note, collectionId, newCollectionName);
+    const { errors: fieldErrors, result } = validate(priority, note, collectionId);
     setErrors(fieldErrors);
     if (!result) return;
 
     if (editing) {
       updateCardInCollection(editing.collectionId, editing.item.id, result.draft);
+      if (result.collectionId !== editing.collectionId) {
+        moveCard(editing.item.id, editing.collectionId, result.collectionId);
+      }
     } else if (card) {
-      const targetCollectionId = result.newCollectionName
-        ? createCollection(result.newCollectionName).id
-        : result.collectionId;
-      addCardToCollection(targetCollectionId, card, result.draft);
+      addCardToCollection(result.collectionId, card, result.draft);
     }
 
     setSaved(true);
@@ -182,12 +188,21 @@ export function WishlistModal({ card, editing, open, onClose, onSaved }: Wishlis
     window.setTimeout(onClose, 900);
   };
 
+  const handleCreateCollection = () => {
+    const name = newCollectionName.trim();
+    if (name.length < COLLECTION_NAME_MIN) {
+      setErrors((prev) => ({ ...prev, collection: `Mínimo ${COLLECTION_NAME_MIN} caracteres.` }));
+      return;
+    }
+    const created = createCollection(name);
+    setCollectionId(created.id);
+    setCreatingCollection(false);
+    setNewCollectionName("");
+    setErrors((prev) => ({ ...prev, collection: undefined }));
+  };
+
   const noteLength = note.length;
   const noteOver = noteLength > NOTE_MAX;
-  const creatingNew = collectionId === NEW_COLLECTION_VALUE;
-  const editingCollectionName = editing
-    ? (collections.find((c) => c.id === editing.collectionId)?.name ?? "Colección eliminada")
-    : null;
 
   return createPortal(
     <div
@@ -255,48 +270,88 @@ export function WishlistModal({ card, editing, open, onClose, onSaved }: Wishlis
             </div>
 
             <div className={styles.field}>
-              {editing ? (
+              <label htmlFor="wl-collection" className={styles.label}>
+                {editing ? "Mover a mazo" : "Colección"} <span className={styles.req}>*</span>
+              </label>
+              <div className={styles.selectWrap}>
+                <select
+                  id="wl-collection"
+                  className={styles.select}
+                  value={collectionId}
+                  onChange={(e) => setCollectionId(e.target.value)}
+                  aria-invalid={Boolean(errors.collection)}
+                  aria-describedby={errors.collection ? "wl-collection-err" : undefined}
+                >
+                  {collections.length === 0 ? <option value="">Sin colecciones aún</option> : null}
+                  {collections.map((collection) => (
+                    <option key={collection.id} value={collection.id}>
+                      {collection.name} ({collection.items.length})
+                    </option>
+                  ))}
+                </select>
+                <ChevronDown size={16} className={styles.selectChevron} aria-hidden="true" />
+              </div>
+
+              {!editing ? (
                 <>
-                  <span className={styles.label}>Colección</span>
-                  <p className={styles.hint}>{editingCollectionName}</p>
-                </>
-              ) : (
-                <>
-                  <label htmlFor="wl-collection" className={styles.label}>
-                    Colección <span className={styles.req}>*</span>
-                  </label>
-                  <select
-                    id="wl-collection"
-                    className={styles.input}
-                    value={collectionId}
-                    onChange={(e) => setCollectionId(e.target.value)}
-                    aria-invalid={Boolean(errors.collection)}
-                    aria-describedby={errors.collection ? "wl-collection-err" : undefined}
+                  <button
+                    type="button"
+                    className={styles.addCollectionBtn}
+                    aria-expanded={creatingCollection}
+                    onClick={() => setCreatingCollection((v) => !v)}
                   >
-                    {collections.map((collection) => (
-                      <option key={collection.id} value={collection.id}>
-                        {collection.name} ({collection.items.length})
-                      </option>
-                    ))}
-                    <option value={NEW_COLLECTION_VALUE}>+ Crear nueva colección…</option>
-                  </select>
-                  {creatingNew ? (
-                    <input
-                      type="text"
-                      className={styles.input}
-                      placeholder="p. ej. Commander Deck: Atraxa"
-                      value={newCollectionName}
-                      onChange={(e) => setNewCollectionName(e.target.value)}
-                      aria-label="Nombre de la nueva colección"
-                    />
-                  ) : null}
-                  {errors.collection ? (
-                    <p id="wl-collection-err" className={styles.error}>
-                      {errors.collection}
-                    </p>
+                    <Plus size={14} aria-hidden="true" />
+                    Nueva colección
+                  </button>
+
+                  {creatingCollection ? (
+                    <div className={styles.newCollectionRow}>
+                      <input
+                        ref={newCollectionInputRef}
+                        type="text"
+                        className={styles.input}
+                        placeholder="p. ej. Commander Deck: Atraxa"
+                        value={newCollectionName}
+                        onChange={(e) => setNewCollectionName(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            e.preventDefault();
+                            handleCreateCollection();
+                          } else if (e.key === "Escape") {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            setCreatingCollection(false);
+                            setNewCollectionName("");
+                          }
+                        }}
+                        aria-label="Nombre de la nueva colección"
+                      />
+                      <button
+                        type="button"
+                        className={styles.chipSave}
+                        onClick={handleCreateCollection}
+                      >
+                        Guardar
+                      </button>
+                      <button
+                        type="button"
+                        className={styles.chipCancel}
+                        onClick={() => {
+                          setCreatingCollection(false);
+                          setNewCollectionName("");
+                        }}
+                      >
+                        Cancelar
+                      </button>
+                    </div>
                   ) : null}
                 </>
-              )}
+              ) : null}
+              {errors.collection ? (
+                <p id="wl-collection-err" className={styles.error}>
+                  {errors.collection}
+                </p>
+              ) : null}
             </div>
 
             <div className={styles.field}>

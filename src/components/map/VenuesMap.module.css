@@ -1,8 +1,15 @@
 .mapContainer {
   width: 100%;
-  height: 320px;
+  min-height: 380px;
+  height: 50vh;
+  max-height: 520px;
   border-radius: var(--radius-lg);
   overflow: hidden;
+  /* New stacking context so nothing inside (see z-index overrides below)
+     can ever be promoted above siblings outside this box, regardless of
+     Leaflet's own internal z-index values. */
+  isolation: isolate;
+  position: relative;
 }
 
 /* The container div also receives Leaflet's own "leaflet-container" class
@@ -10,6 +17,46 @@
 .mapContainer:global(.leaflet-container) {
   background: var(--bg-surface);
   font-family: var(--font-sans);
+}
+
+/* ---- Leaflet stacking overrides ----------------------------------------
+   Leaflet's own stylesheet puts .leaflet-pane at z-index 400-700 and
+   .leaflet-top/.leaflet-bottom controls at z-index 1000 — both above this
+   app's fixed BottomNav (var(--z-bottom-nav), 200). `isolation: isolate`
+   above already contains them, but the panes are pinned explicitly too so
+   Leaflet's relative pane order (tiles < overlays < markers < popups <
+   controls) is preserved entirely under --z-map-controls. */
+.mapContainer :global(.leaflet-pane) {
+  z-index: 10;
+}
+
+.mapContainer :global(.leaflet-tile-pane) {
+  z-index: 10;
+}
+
+.mapContainer :global(.leaflet-overlay-pane) {
+  z-index: 20;
+}
+
+.mapContainer :global(.leaflet-shadow-pane) {
+  z-index: 30;
+}
+
+.mapContainer :global(.leaflet-marker-pane) {
+  z-index: 40;
+}
+
+.mapContainer :global(.leaflet-tooltip-pane) {
+  z-index: 50;
+}
+
+.mapContainer :global(.leaflet-popup-pane) {
+  z-index: 60;
+}
+
+.mapContainer :global(.leaflet-top),
+.mapContainer :global(.leaflet-bottom) {
+  z-index: var(--z-map-controls, 80);
 }
 
 /* Invert only the tile layer so markers/popups keep their real colors on

@@ -145,6 +145,138 @@
   color: var(--text-muted);
 }
 
+/* ---- Collection dropdown ---- */
+.selectWrap {
+  position: relative;
+  display: flex;
+}
+
+.select {
+  width: 100%;
+  padding: var(--space-3) var(--space-7) var(--space-3) var(--space-3);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-luminous);
+  background: var(--bg-main);
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: var(--text-sm);
+  appearance: none;
+  -webkit-appearance: none;
+  transition:
+    border-color var(--transition-base),
+    box-shadow var(--transition-base);
+}
+
+.select:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+  box-shadow: var(--glow-primary);
+}
+
+.select[aria-invalid="true"] {
+  border-color: var(--color-danger);
+}
+
+.select option {
+  background: var(--bg-surface);
+  color: var(--text-primary);
+}
+
+.selectChevron {
+  position: absolute;
+  top: 50%;
+  right: var(--space-3);
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  pointer-events: none;
+}
+
+/* Pinned below the dropdown — always visible, never nested inside the
+   <select> itself, so it works the same on every browser/OS picker. */
+.addCollectionBtn {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-pill);
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--accent-glow);
+  border: 1px dashed var(--border-strong);
+  background: transparent;
+  transition:
+    border-color var(--transition-base),
+    box-shadow var(--transition-base),
+    transform var(--transition-fast);
+}
+
+.addCollectionBtn:hover {
+  border-color: var(--accent-primary);
+  box-shadow: var(--glow-primary);
+}
+
+.addCollectionBtn:active {
+  transform: scale(0.97);
+}
+
+.addCollectionBtn[aria-expanded="true"] {
+  color: var(--text-on-accent);
+  border-style: solid;
+  border-color: transparent;
+  background: var(--accent-primary);
+}
+
+.newCollectionRow {
+  display: flex;
+  gap: var(--space-2);
+  animation: rise var(--transition-base) var(--ease-out-back);
+}
+
+.newCollectionRow .input {
+  flex: 1;
+}
+
+.chipSave,
+.chipCancel {
+  flex-shrink: 0;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-semibold);
+  transition:
+    box-shadow var(--transition-base),
+    transform var(--transition-fast),
+    opacity var(--transition-base);
+}
+
+.chipSave {
+  color: var(--text-on-accent);
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+  box-shadow: var(--glow-primary);
+}
+
+.chipCancel {
+  color: var(--text-secondary);
+  border: 1px solid var(--border-luminous);
+}
+
+.chipCancel:hover {
+  color: var(--text-primary);
+  border-color: var(--border-strong);
+}
+
+.chipSave:active,
+.chipCancel:active {
+  transform: scale(0.96);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .newCollectionRow {
+    animation: none;
+  }
+}
+
 .error {
   font-size: var(--text-xs);
   color: var(--color-danger);
