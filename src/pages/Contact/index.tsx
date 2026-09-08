@@ -45,7 +45,7 @@ export function ContactPage() {
         <h2 className={styles.studioName}>ManaDeck Studio</h2>
         <p className={styles.studioText}>
           Trabajo práctico de la cátedra de Desarrollo de Aplicaciones Web.
-          Facultad de Informática · Universidad Nacional de La Plata.
+          Facultad de Informática · Universidad Nacional Arturo Jauretche.
         </p>
         <dl className={styles.facts}>
           <div>
