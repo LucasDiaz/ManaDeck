@@ -49,10 +49,4 @@ src/
 All pages render inside a persistent shell with a sticky brand header and a
 fixed bottom navigation bar that highlights the active route.
 
-## Status
-
-**Phase 1 — scaffolding & base layout.** No API calls or business logic yet.
-
----
-
 ManaDeck is not affiliated with Wizards of the Coast or Scryfall.
